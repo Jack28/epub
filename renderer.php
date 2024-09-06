@@ -128,18 +128,18 @@
                      $mpfile = str_replace('Audio/',"",$src);                            
                          $display_name = $title;
                          $title = $mpfile;                     
-                     $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div><p>";             
+                     $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name, 'url'=>'') )  ."\n</div><p>";             
 			    }
 			}
          else if(strpos($mtype[1],'video') !== false)       {	
                      if($this->video_link)  $out .= '</p><div style="text-align:center">' ;//$out .= '<div style="text-align:center">' ;         
                 $out .= $this->set_video($src,$mtype,$title) ;   
                     if($this->video_link) {
-                          list($title,$rest) = explode('(', $title);
+                          list($title,$rest) = array_pad(explode('(', $title), 2, '');
                          $mpfile = str_replace('Video/',"",$src);                            
                          $display_name = $title;
                          $title = $mpfile;                     
-                         $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp4','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div><p>";             
+                         $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp4','title'=>$title,'name'=>$title, 'display'=>$display_name, 'url'=>'') )  ."\n</div><p>";             
                     }
          }
 			else {		 		 
