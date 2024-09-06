@@ -83,6 +83,7 @@
                 break;
                }
             }
+	    $cover_png = "";
 			if ($user_title || !$skip_default_title)
 				$title_html = '<item id="cover" href="Text/title.html" media-type="application/xhtml+xml"/>'."\n";
             if(!$user_title && !$skip_default_title) {
