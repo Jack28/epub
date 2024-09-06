@@ -616,7 +616,10 @@ MATHJAX;
         function epub_checkfor_ns($name, &$pages, &$titles) {
             $name = rtrim($name);
 
-            $n = strrpos($name,'*',-1);
+            $n = false;
+            if (strlen($n) > 0){
+                $n = strrpos($name,'*',-1);
+            }
             if(!$n) return;
              array_shift($pages);  // remove namespace id:  namespace:*
        
