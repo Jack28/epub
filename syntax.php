@@ -1,8 +1,11 @@
 <?php
 	
-	if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
-	if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-	require_once(DOKU_PLUGIN.'syntax.php');
+use dokuwiki\Cache\Cache;
+use dokuwiki\Extension\ActionPlugin;
+use dokuwiki\Extension\Event;
+use dokuwiki\Extension\EventHandler;
+use dokuwiki\StyleUtils;
+
 	
 	
 	class syntax_plugin_epub extends DokuWiki_Syntax_Plugin {
