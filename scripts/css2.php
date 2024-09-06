@@ -66,9 +66,9 @@ function epub_css_out($path){
      }
 
     // load user styles
-    if(isset($config_cascade['userstyle'][$mediatype])){
-        $files[$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
-    }
+    #if(isset($config_cascade['userstyle'][$mediatype])){
+    #    $files[$config_cascade['userstyle'][$mediatype]] = DOKU_BASE;
+    #}
  
     // load files
     $css = "";
