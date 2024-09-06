@@ -141,8 +141,8 @@ use Mpdf\Tag\Tr;
                  list($title,$rest) = explode('(', $title);
                      $mpfile = str_replace('Audio/',"",$src);
                          $display_name = $title;
-                         $title = $mpfile;
-                     $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div><p>";
+                         $title = $mpfile;                     
+                     $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp3','title'=>$title,'name'=>$title, 'display'=>$display_name, 'url'=>'') )  ."\n</div><p>";             
 			    }
 			}
          else if(strpos($mtype[1],'video') !== false)       {
@@ -153,7 +153,7 @@ use Mpdf\Tag\Tr;
                          $mpfile = str_replace('Video/',"",$src);
                          $display_name = $title;
                          $title = $mpfile;
-                         $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp4','title'=>$title,'name'=>$title, 'display'=>$display_name) )  ."\n</div><p>";
+                         $out .=  $this->_formatLink( array('class'=>'media mediafile mf_mp4','title'=>$title,'name'=>$title, 'display'=>$display_name, 'url'=>'') )  ."\n</div><p>";             
                     }
          }
 			else {
