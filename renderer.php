@@ -180,7 +180,7 @@
 			
 			$mime_type = mimetype($link['title']);
 			if(!$mime_type[1] ) {
-				list($url,$rest) = explode('?', $link['url']); 		                      
+				list($url,$rest) = array_pad(explode('?', $link['url']), 2,'');
 				$mime_type = mimetype($url);                
                 if(!$mime_type[1]) {
                     $mime_type = mimetype($rest);
@@ -333,7 +333,7 @@
         function local_name($link,&$orig="", &$frag ="") {
             $base_name= basename($link['url']);
             $title = $link['title']? ltrim($link['title'],':'): "";
-            list($starturl,$frag) = explode('#',$link['url']);
+            list($starturl,$frag) = array_pad(explode('#',$link['url']), 2, '');
             if ($title) {
                 $name = $title;
             }  

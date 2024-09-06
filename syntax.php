@@ -86,7 +86,7 @@ use dokuwiki\StyleUtils;
 
 					for($i=0;$i<count($files);$i++) {					      
 	                    $file = trim($files[$i],'][');
-		                list($file,$rest) = explode('|',$file);	
+			        list($file,$rest) = array_pad(explode('|',$file), 2, '');
 						$file=trim($file);
 						$file=trim($file,'/');							 		
 						if(!$file) continue;				  
