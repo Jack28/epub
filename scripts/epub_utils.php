@@ -31,6 +31,7 @@
                }
             }
            
+	    $cover_png = "";
            if(!$user_title) {			
                $cover_png='<item id="cover-image" href="Images/cover.png" media-type="image/png"/>'. "\n";
             }
