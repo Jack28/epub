@@ -73,6 +73,7 @@
       */
 		function epub_opf_header($user_title, $skip_default_title)
 		{
+			$url = "";
 			$metadata = prepare_metadata();
 			$metadata_text = metadata_text($metadata);
             $epub_version = "fckglite";

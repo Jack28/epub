@@ -383,7 +383,12 @@ use Mpdf\Tag\Tr;
             $base_name= basename($url);
 			$title = $link['title'];
 			$title = $title ?  ltrim($title,':') : ($conf['useheading'] ?  p_get_first_heading($url) : "");
-            list($starturl,$frag) = explode('#',$url);
+	    $res = explode('#',$url);
+	    if (count($res) >= 2) {
+		    list($starturl,$frag) = $res;
+	    } else {
+		    list($starturl,$frag) = [$res[0], null];
+	    }
             if ($title) {
                 $name = $title;
             }
