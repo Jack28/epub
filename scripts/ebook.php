@@ -72,7 +72,7 @@ use Mpdf\Tag\Tr;
 			$result .= "<div class='dokuwiki'>\n";
 			$info = $Renderer->info;
 			$data = array($mode,& $Renderer->doc);
-			trigger_event('RENDERER_CONTENT_POSTPROCESS',$data);
+			//trigger_event('RENDERER_CONTENT_POSTPROCESS',$data);
 
 			$xhtml = $Renderer->doc;
 			$result .= $xhtml;

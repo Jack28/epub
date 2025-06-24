@@ -103,7 +103,7 @@ use dokuwiki\StyleUtils;
              if(!$this->helper) {             
                 $this->helper = $this->loadHelper('epub', true);
             }          
-            if (!$this->helper->is_inCache($INFO['id']))  return;  //cache set in syntax.php 
+            //if (!$this->helper->is_inCache($INFO['id']))  return;  //cache set in syntax.php 
           $event->preventDefault();         
      }
      

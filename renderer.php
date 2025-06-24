@@ -307,7 +307,7 @@ use Mpdf\Tag\Tr;
 			else if($type=='media') {  //internal media
 				$id = "";
 				$name = $this->local_name($link,$id);
-				$display = $link['display'];
+				//$display = $link['display'];
                 if(!empty($display)) {
                     $link['name'] = $display;
                     if(strpos($class,'mp3') !== false) {
@@ -382,11 +382,7 @@ use Mpdf\Tag\Tr;
 			$url = $link['url'];
             $base_name= basename($url);
 			$title = $link['title'];
-			$title = $title ?
-				ltrim($title,':') :
-				$conf['useheading'] ?
-					p_get_first_heading($url) :
-					"";
+			$title = $title ?  ltrim($title,':') : ($conf['useheading'] ?  p_get_first_heading($url) : "");
             list($starturl,$frag) = explode('#',$url);
             if ($title) {
                 $name = $title;
@@ -417,6 +413,7 @@ use Mpdf\Tag\Tr;
         }
 
 		function copy_media($media, $external=false, $width=NULL, $height=NULL) {
+			$resize = false;
 
             // echo 'copy_media '.$media."\n";
 			$name =  epub_clean_name(str_replace(':','_',basename($media)));
@@ -506,6 +503,7 @@ use Mpdf\Tag\Tr;
 		function set_image($img, $title = null, $width=null, $height=null, $align=null) {
 			$w="";
 			$h="";
+			$result="";
 			if($width)   $w= ' width="' . $width . '"';
 			if($height)   $h= ' height="' .$height . '"';
             $img = $this->clean_image_link($img);

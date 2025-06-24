@@ -84,11 +84,18 @@ use dokuwiki\StyleUtils;
 					$renderer->doc .= "\nvar epub_wikilink = new Array();\nvar epub_id = new Array();\nvar epub_level = new Array();\n";
 					$files = explode("\n",$match);
 
-					for($i=0;$i<count($files);$i++) {					      
+					for($i=0;$i<count($files);$i++) {
 						$file = $files[$i];
 						$level = syntax_plugin_epub::parseUnorderedListItemLevel($file);
 						$file = trim($file,'][');
-		                list($file,$rest) = explode('|',$file);
+						//print("CCCCC");
+						//print($file);
+						$res = explode('|',$file);
+						if (count($res) >= 2) {
+		                		  list($file,$rest) = $res;
+						} else {
+						  list($file,$rest) = [$res[0], null];
+						}
 						$file=trim($file,'/');							 		
 						if(!$file) continue;				  
  						if(!auth_quickaclcheck($file)) { 							
