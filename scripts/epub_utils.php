@@ -265,15 +265,43 @@ HEADER;
 			return $handle;
 		}
 		
-        function epub_save_image($img,$fullpath){         
-          $command = "wget --quiet $img -O $fullpath";
-          $s = exec ($command, $output,$retv);
-           
-           if(!$retv && file_exists($fullpath)) {
-               return true;
-           }           
-           else echo "Cannot fetch $img\n";
-           
+        function epub_save_image($img,$fullpath){
+          $img = trim((string)$img);
+          $fullpath = trim((string)$fullpath);
+
+          if($img === '' || $fullpath === '' || !preg_match('#^https?://#i', $img)) {
+              echo "Cannot fetch $img\n";
+              return false;
+          }
+
+          $dir = dirname($fullpath);
+          if(!is_dir($dir) && !@mkdir($dir, 0777, true) && !is_dir($dir)) {
+              echo "Cannot create directory for $fullpath\n";
+              return false;
+          }
+
+          $context = stream_context_create(array(
+              'http' => array(
+                  'timeout' => 15,
+                  'ignore_errors' => true,
+              ),
+              'https' => array(
+                  'timeout' => 15,
+                  'ignore_errors' => true,
+              ),
+          ));
+
+          $data = @file_get_contents($img, false, $context);
+          if($data === false || $data === '') {
+              echo "Cannot fetch $img\n";
+              return false;
+          }
+
+          if(@file_put_contents($fullpath, $data) !== false) {
+              return true;
+          }
+
+          echo "Cannot fetch $img\n";
           return false;
         }		
         
