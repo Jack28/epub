@@ -67,9 +67,9 @@
 			$result .= "\n<title>";
 			$result .= "</title>\n</head><body>\n";
 			$result .= "<div class='dokuwiki'>\n";
-			$info = $Renderer->info;       
-			$data = array($mode,& $Renderer->doc);
-			trigger_event('RENDERER_CONTENT_POSTPROCESS',$data);
+			$info = $Renderer->info;
+			$doc = $Renderer->doc;
+			trigger_event('RENDERER_CONTENT_POSTPROCESS', array($mode, $doc));
 			
 			$xhtml = $Renderer->doc;
 			$result .= $xhtml;			
@@ -159,13 +159,19 @@
 	}	
 	       
            global $INPUT;
-            // $epub_ids = 'ditaa:win_filebrowser;;introduction;;v06;;features;;index:site_inx';  
+            $epub_ids = '';
+            $e_titles = '';
+            // $epub_ids = 'ditaa:win_filebrowser;;introduction;;v06;;features;;index:site_inx';
             if(isset ($_POST['epub_ids'])) $epub_ids = rawurldecode($INPUT->post->str('epub_ids'));
             if(isset ($_POST['epub_titles'])) $e_titles = rawurldecode($INPUT->post->str('epub_titles'));
-			$epub_pages =  explode(';;',$epub_ids) ;
-            $epub_titles = explode(';;',$e_titles) ;
+			$epub_pages = $epub_ids !== '' ? explode(';;',$epub_ids) : array();
+            $epub_titles = $e_titles !== '' ? explode(';;',$e_titles) : array();
+            if(empty($epub_pages) || !isset($epub_pages[0]) || $epub_pages[0] === '') {
+                echo "No EPUB pages supplied\n";
+                exit;
+            }
             $epub_user_title = strpos($epub_pages[0], 'title') !== false ? true: false;
-	   	    epub_setup_book_skel($epub_user_title) ;			
+	   	    epub_setup_book_skel($epub_user_title) ;		
             epub_opf_header($epub_user_title);
             if($epub_user_title) {
                 $creator = new epub_creator();
