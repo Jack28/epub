@@ -18,14 +18,14 @@
             $namespace= getNS($id);
             epub_save_namespace($namespace);
             $mode ='epub';
-            $Renderer =& plugin_load('renderer',$mode);	    
+            $Renderer = plugin_load('renderer',$mode);
+            if(is_null($Renderer)){
+                msg("No renderer for $mode found",-1);
+                exit;
+            }
             $Renderer->set_oebps() ;
             $Renderer->set_current_page(epub_clean_name(str_replace(':', '_', $id)) . '.html') ;
             $this->_renderer = $Renderer;
-            if(is_null($Renderer)){
-                msg("No renderer for $mode found",-1);  
-                exit;
-            }
 		
 
 			global $ID;
@@ -53,7 +53,7 @@
 			// Loop through the instructions
 			foreach ( $instructions as $instruction ) {
 				// Execute the callback against the Renderer
-				call_user_func_array(array(&$Renderer, $instruction[0]),$instruction[1]);
+				call_user_func_array(array($Renderer, $instruction[0]),$instruction[1]);
 			}
 			$result = "";
             $result .='<?xml version="1.0" encoding="utf-8"?>

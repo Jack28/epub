@@ -496,7 +496,7 @@ NAVPOINT;
 				}
 			} 
 			else echo "ziparchive used\n";
-            $plugin =& plugin_load('syntax','epub');            
+            $plugin = plugin_load('syntax','epub');
 			$oldname = $meta . 'my-book.epub';	        
             $rmdir= $plugin->getConf('rmdir');
 			$epub_file = strtolower(date("Y_F_j_h-i-s") ) . '.epub';			
@@ -612,8 +612,8 @@ NAVPOINT;
 
  	    function epub_check_for_mathjax(&$result) {
              
-             if(epub_is_installed_plugin('mathjax_protecttex') ) {        
-             $plugin =& plugin_load('syntax','mathjax_protecttex');
+             if(epub_is_installed_plugin('mathjax_protecttex') ) {
+             $plugin = plugin_load('syntax','mathjax_protecttex');
              $url = $plugin->getConf('url');
               if(preg_match("#^//#",$url)) {
                   $url = "http:" . $url;

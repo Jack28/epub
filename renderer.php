@@ -436,10 +436,9 @@
 		    if($name !='mathpublish' && $name !='ditaa' && $name !='graphviz') return parent::plugin($name,$data);
            
 		    $mode ='xhtml';
-		    $renderer =p_get_renderer($mode );		
-            $plugin =& plugin_load('syntax',$name);
-            if($plugin != null) {			
-                $plugin->render($mode,$renderer,$data);
+		    $renderer =p_get_renderer($mode );
+            $plugin = plugin_load('syntax',$name);
+            if($plugin != null) {
 	            
 		        if($name == 'ditaa') {
 			        epub_check_for_ditaa($renderer->doc,$this);					    

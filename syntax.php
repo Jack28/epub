@@ -37,7 +37,7 @@ use dokuwiki\StyleUtils;
 			
 		}
 		function __construct() {
-		    $this->helper =& plugin_load('helper', 'epub');
+		    $this->helper = plugin_load('helper', 'epub');
 		}
 		function handle($match, $state, $pos, Doku_Handler $handler) {		 
             $match = str_replace(';','&#59;',$match);		  
