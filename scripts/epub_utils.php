@@ -265,11 +265,60 @@ HEADER;
 			return $handle;
 		}
 		
+        function epub_normalize_relpath($path) {
+            $path = str_replace('\\', '/', (string)$path);
+            $path = preg_replace('#/+#', '/', $path);
+            $segments = array();
+
+            foreach (explode('/', $path) as $segment) {
+                if ($segment === '' || $segment === '.') {
+                    continue;
+                }
+                if ($segment === '..') {
+                    if (!empty($segments)) {
+                        array_pop($segments);
+                    }
+                    continue;
+                }
+                $segments[] = $segment;
+            }
+
+            return implode('/', $segments);
+        }
+
+        function epub_remove_tree($path) {
+            $path = rtrim((string)$path, DIRECTORY_SEPARATOR . '/');
+            if ($path === '' || !is_dir($path)) {
+                return true;
+            }
+
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+
+            foreach ($iterator as $item) {
+                if ($item->isDir()) {
+                    @rmdir($item->getPathname());
+                } else {
+                    @unlink($item->getPathname());
+                }
+            }
+
+            return @rmdir($path);
+        }
+
         function epub_save_image($img,$fullpath){
           $img = trim((string)$img);
           $fullpath = trim((string)$fullpath);
 
-          if($img === '' || $fullpath === '' || !preg_match('#^https?://#i', $img)) {
+          if($img === '' || $fullpath === '') {
+              echo "Cannot fetch $img\n";
+              return false;
+          }
+
+          $parts = parse_url($img);
+          if(!isset($parts['scheme']) || !isset($parts['host']) || !in_array(strtolower($parts['scheme']), array('http','https'), true)) {
               echo "Cannot fetch $img\n";
               return false;
           }
@@ -338,8 +387,12 @@ HEADER;
 				if($zip) 	$oebps = epub_get_oebps(); 			 
 			}	
 			 if($zip) {
+			      $url = epub_normalize_relpath($url);
 			      $file = $oebps . $url;
-			      $zip->addFile($file, "OEBPS/$url");
+			      $dest = 'OEBPS/' . $url;
+			      if (file_exists($file)) {
+			          $zip->addFile($file, $dest);
+			      }
 			 }
 			 
 		 }
@@ -512,22 +565,10 @@ NAVPOINT;
                 $helper->delete_dw_cachefiles($id);
 			}
            
-             if($rmdir == 'y') {                             
-                if(epub_isWindows()) {
-                  $meta = str_replace('/','\\',$meta);
-                   $cmd = "RMDIR /s /q $meta";                                     
+if($rmdir == 'y') {
+                if(!epub_remove_tree($meta)) {
+                   echo "unable to remove dir:<br />&nbsp;&nbsp;$meta<br />&nbsp;&nbsp;error code: 1\n";
                 }
-                else { 
-                    $cmd ="rm -f -r $meta";
-                }                
-                 
-                system($cmd,$retval);                
-                if($retval)  {
-                   echo "unable to remove dir:<br />&nbsp;&nbsp;$meta<br />&nbsp;&nbsp;error code: $retval\n";
-                 }
-                 else {
-                     echo "$cmd\n";
-                 }
              }                   
             
 		}	 
