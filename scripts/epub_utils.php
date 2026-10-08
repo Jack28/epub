@@ -532,23 +532,14 @@ NAVPOINT;
 				  $user= rawurldecode($_POST['client']) . '/';
 			  }
 		    $meta = epub_get_metadirectory() ;
-		    echo "$meta\n";	 
-			 if(!epub_zip_handle() && epub_isWindows()) {
-                epub_pack_ZipLib($meta);
-			 }
-			 elseif(!epub_zip_handle()) {
-			    chdir($meta);			 
-			    echo rawurlencode("*nix zip command used \n");
-			    $cmd =  'zip -Xr9Dq my-book.epub *';				
-			    exec($cmd,$ar, $ret);
-				if($ret > 0) {
-				   echo "zip error: exit status=$ret\n";
-				   echo "<b>Error codes:</b>\n  4: memory allocation error\n  11-18: unable write to or create file\n  127: zip command not found\n";
-                   echo "Trying ZipLib\n";
-                   epub_pack_ZipLib($meta);
-				}
-			} 
-			else echo "ziparchive used\n";
+		    echo "$meta\n";
+
+		    if(class_exists('ZipArchive')) {
+		        epub_pack_with_ziparchive($meta);
+		    } else {
+		        epub_pack_ZipLib($meta);
+		    }
+
             $plugin = plugin_load('syntax','epub');
 			$oldname = $meta . 'my-book.epub';	        
             $rmdir= $plugin->getConf('rmdir');
@@ -573,11 +564,48 @@ if($rmdir == 'y') {
             
 		}	 
 		
+function epub_pack_with_ziparchive($meta) {
+			    $epub_file = rtrim($meta, '/\\') . '/my-book.epub';
+			    @unlink($epub_file);
+			    $zip = new ZipArchive();
+			    $res = $zip->open($epub_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+			    if ($res !== true) {
+			        echo "ziparchive failed to create: $epub_file (code=$res)\n";
+			        epub_pack_ZipLib($meta);
+			        return;
+			    }
+
+			    $base = realpath($meta);
+			    if ($base === false) {
+			        $base = rtrim($meta, '/\\');
+			    }
+
+			    $iterator = new RecursiveIteratorIterator(
+			        new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS),
+			        RecursiveIteratorIterator::LEAVES_ONLY
+			    );
+
+			    foreach ($iterator as $file) {
+			        $path = $file->getPathname();
+			        $relative = str_replace('\\', '/', substr($path, strlen($base) + 1));
+			        if ($relative === 'my-book.epub' || $relative === '' || $relative === '.' ) {
+			            continue;
+			        }
+			        if (!$file->isFile()) {
+			            continue;
+			        }
+			        $zip->addFile($path, $relative);
+			    }
+
+			    $zip->close();
+		}
+
         function epub_pack_ZipLib($meta) {
+			    $meta = rtrim($meta, '/\\');
 			    chdir($meta);
-				echo	 rawurlencode("Using Dokuwiki's ZipLib Class\n");
-				$epub_file = $meta . 'my-book.epub';
-				unlink($epub_file);
+			    echo rawurlencode("Using Dokuwiki's ZipLib Class\n");
+			    $epub_file = $meta . '/my-book.epub';
+			    @unlink($epub_file);
                 $z = new ZipLib;
                 $z->add_File('application/epub+zip', 'mimetype', 0);
                 $z->Compress('OEBPS','./');
