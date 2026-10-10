@@ -69,8 +69,11 @@
 			$result .= "<div class='dokuwiki'>\n";
 			$info = $Renderer->info;
 			$doc = $Renderer->doc;
-			trigger_event('RENDERER_CONTENT_POSTPROCESS', array($mode, $doc));
-			
+                        #trigger_event('RENDERER_CONTENT_POSTPROCESS', array($mode, $doc));
+                        $data = array($mode, $doc);
+                        $event = new \dokuwiki\Extension\Event('RENDERER_CONTENT_POSTPROCESS', $data);
+                        $event->trigger();
+
 			$xhtml = $Renderer->doc;
 			$result .= $xhtml;			
             //handle image maps
